@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -9,29 +9,29 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-import { styled } from '@mui/system';
-import './index.css';
+import { styled } from "@mui/system";
+import "./index.css";
 
 const StyledContainer = styled(Container)({
-  marginTop: '2rem',
-  padding: '2rem',
-  textAlign: 'center',
-  width: '350px',
+  marginTop: "2rem",
+  padding: "2rem",
+  textAlign: "center",
+  width: "350px",
 });
 
 const StyledFormGroup = styled(Box)({
-  marginBottom: '1rem',
+  marginBottom: "1rem",
 });
 
 const PasswordDisplay = styled(Box)({
-  marginTop: '1rem',
-  padding: '1rem',
-  backgroundColor: '#f5f5f5',
-  borderRadius: '5px',
+  marginTop: "1rem",
+  padding: "1rem",
+  backgroundColor: "#f5f5f5",
+  borderRadius: "5px",
 });
 
 const CopyButton = styled(Button)({
-  marginTop: '1rem',
+  marginTop: "1rem",
 });
 
 function App() {
@@ -42,22 +42,22 @@ function App() {
   const [text, setText] = useState("Copy Password");
 
   const hasGeneratePassword = () => {
+    let password = "";
     const numbers = "1234567890";
     const characters = "!@#$%^&*()_+";
     let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     charset += hasNumbers ? numbers : "";
     charset += hasCharacters ? characters : "";
-    setPassword(generatePassword(charset, length));
+    for (let i = 0; i < length; i++) {
+      const ch = Math.floor(Math.random() * charset.length);
+      password += charset.charAt(ch);
+    }
+    setPassword(password);
   };
 
-  const generatePassword = (charset, length) => {
-    let password = "";
-    for (let i = 0; i < length; i++) {
-      const at = Math.floor(Math.random() * charset.length);
-      password += charset.charAt(at);
-    }
-    return password;
-  };
+  useEffect(() => {
+    hasGeneratePassword();
+  }, [length, hasNumbers, hasCharacters]);
 
   const copyPassword = () => {
     navigator.clipboard.writeText(password);
@@ -69,8 +69,8 @@ function App() {
 
   return (
     <StyledContainer>
-      <Paper elevation={3} style={{ padding: '2rem' }}>
-        <Typography variant="h5" gutterBottom>
+      <Paper elevation={3} style={{ padding: "2rem" }}>
+        <Typography variant="h5" style={{ paddingBottom: "1rem" }} gutterBottom>
           Password Generator
         </Typography>
         <StyledFormGroup>
@@ -84,7 +84,12 @@ function App() {
             size="small"
           />
         </StyledFormGroup>
-        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="1rem">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom="1rem"
+        >
           <FormControlLabel
             control={
               <Checkbox
@@ -111,7 +116,7 @@ function App() {
           variant="contained"
           color="primary"
           onClick={hasGeneratePassword}
-          style={{ marginBottom: '1rem' }}
+          style={{ marginBottom: "1rem" }}
         >
           Generate Password
         </Button>
