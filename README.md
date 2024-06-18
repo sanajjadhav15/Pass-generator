@@ -20,8 +20,8 @@ To run this project locally, you need to have Node.js and npm (Node Package Mana
     npm install
 ### Running the Application
 To start the development server, run:
-```
-npm start
+    ```
+    npm start
 
 This will start the application in development mode and open it in your default web browser. If it does not open automatically, you can access it by navigating to http://localhost:3000 in your browser.
 
