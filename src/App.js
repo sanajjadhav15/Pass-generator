@@ -1,24 +1,141 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Paper,
+  Box,
+} from "@mui/material";
+import { styled } from '@mui/system';
+import './index.css';
+
+const StyledContainer = styled(Container)({
+  marginTop: '2rem',
+  padding: '2rem',
+  textAlign: 'center',
+  width: '350px',
+});
+
+const StyledFormGroup = styled(Box)({
+  marginBottom: '1rem',
+});
+
+const PasswordDisplay = styled(Box)({
+  marginTop: '1rem',
+  padding: '1rem',
+  backgroundColor: '#f5f5f5',
+  borderRadius: '5px',
+});
+
+const CopyButton = styled(Button)({
+  marginTop: '1rem',
+});
 
 function App() {
+  const [password, setPassword] = useState("");
+  const [length, setLength] = useState(8);
+  const [hasNumbers, setHasNumbers] = useState(true);
+  const [hasCharacters, setHasCharacters] = useState(true);
+  const [text, setText] = useState("Copy Password");
+
+  const hasGeneratePassword = () => {
+    const numbers = "1234567890";
+    const characters = "!@#$%^&*()_+";
+    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    charset += hasNumbers ? numbers : "";
+    charset += hasCharacters ? characters : "";
+    setPassword(generatePassword(charset, length));
+  };
+
+  const generatePassword = (charset, length) => {
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const at = Math.floor(Math.random() * charset.length);
+      password += charset.charAt(at);
+    }
+    return password;
+  };
+
+  const copyPassword = () => {
+    navigator.clipboard.writeText(password);
+    setText("Copied!");
+    setTimeout(() => {
+      setText("Copy Password");
+    }, 1000);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <StyledContainer>
+      <Paper elevation={3} style={{ padding: '2rem' }}>
+        <Typography variant="h5" gutterBottom>
+          Password Generator
+        </Typography>
+        <StyledFormGroup>
+          <TextField
+            fullWidth
+            type="number"
+            label="Password Length"
+            value={length}
+            onChange={(e) => setLength(e.target.value)}
+            variant="outlined"
+            size="small"
+          />
+        </StyledFormGroup>
+        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="1rem">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hasNumbers}
+                onChange={(e) => setHasNumbers(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="Numbers"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hasCharacters}
+                onChange={(e) => setHasCharacters(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="Special Characters"
+          />
+        </Box>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={hasGeneratePassword}
+          style={{ marginBottom: '1rem' }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Generate Password
+        </Button>
+        <PasswordDisplay>
+          <TextField
+            fullWidth
+            value={password}
+            InputProps={{
+              readOnly: true,
+            }}
+            variant="outlined"
+            size="small"
+          />
+        </PasswordDisplay>
+        <CopyButton
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={copyPassword}
+        >
+          {text}
+        </CopyButton>
+      </Paper>
+    </StyledContainer>
   );
 }
 
