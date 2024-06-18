@@ -18,8 +18,7 @@ To run this project locally, you need to have Node.js and npm (Node Package Mana
 3. Install the dependencies:
     ```
     npm install
-### Running the Application
-To start the development server, run:
+4. To start the development server:
     ```
     npm start
 
